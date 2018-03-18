@@ -8,22 +8,21 @@ defmodule PrimeTest do
   end
 
   test "checks if number is prime" do
-    assert Prime.is_prime?(1) == true
+    assert Prime.is_prime?(1) == false
     assert Prime.is_prime?(2) == true
     assert Prime.is_prime?(3) == true
     assert Prime.is_prime?(10) == false
-    assert Prime.is_prime?(5) == true
     assert Prime.is_prime?(5) == true
     assert Prime.is_prime?(4139) == true
     assert Prime.is_prime?(4135) == false
   end
 
   test "finds all primes in list" do
-    assert Prime.primes_for(1..5) == [1, 2, 3, 5]
+    assert Prime.primes_for(1..5) == [2, 3, 5]
   end
 
   test "finds all primes in list, concurrently" do
-    assert Prime.find_primes(2..100) == [
+    assert Prime.find_primes(1..100) == [
              2,
              3,
              5,

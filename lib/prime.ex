@@ -6,15 +6,14 @@ defmodule Prime do
 
   @doc """
   Splits `range` into sub lists to concurrently find all primes.
-  Order is not guaranteed.
   """
-  @spec find_primes(list) :: list
-  def find_primes(range) do
+  @spec find_primes(list, timeout) :: list
+  def find_primes(range, timeout \\ :infinity) do
     range
     |> Enum.to_list()
     |> split_list(:erlang.system_info(:schedulers))
     |> Enum.map(fn list -> Task.async(fn -> primes_for(list) end) end)
-    |> Enum.map(&Task.await(&1))
+    |> Enum.map(&Task.await(&1, :infinity))
     |> List.flatten()
   end
 
@@ -32,8 +31,7 @@ defmodule Prime do
     |> Enum.filter(&is_prime?(&1))
   end
 
-  def is_prime?(num) when num == 1, do: true
-  def is_prime?(num) when num == 2, do: true
+  def is_prime?(num) when num in [2, 3], do: true
   def is_prime?(num) when rem(num, 2) == 0, do: false
 
   @doc """
@@ -74,7 +72,7 @@ defmodule Prime do
   end
 
   @doc """
-  Splits `list` into `num` parts, as equally as possible.
+  Splits `list` into `num` parts. Tries to do so evenly.
 
   ## Examples
 
